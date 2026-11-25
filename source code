@@ -1,0 +1,58 @@
+Source Code:
+
+
+import pandas as pd
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+
+# Sample cybersecurity dataset
+data = {
+    'failed_logins': [1, 2, 10, 15, 3, 20, 1, 12],
+    'network_traffic': [100, 120, 900, 950, 150, 1000, 110, 850],
+    'suspicious_activity': [0, 0, 1, 1, 0, 1, 0, 1],
+    'threat': [0, 0, 1, 1, 0, 1, 0, 1]
+}
+
+df = pd.DataFrame(data)
+
+# Split dataset
+X = df.drop('threat', axis=1)
+y = df['threat']
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.25, random_state=42
+)
+
+# Train AI model
+model = RandomForestClassifier(random_state=42)
+model.fit(X_train, y_train)
+
+# Test model
+predictions = model.predict(X_test)
+print("Model Accuracy:", accuracy_score(y_test, predictions))
+
+# Analyze new network activity
+activity = pd.DataFrame([{
+    'failed_logins': 15,
+    'network_traffic': 950,
+    'suspicious_activity': 1
+}])
+
+result = model.predict(activity)[0]
+
+# Threat reasoning and defense recommendation
+if result == 1:
+    print("Threat Detected!")
+    print("Risk Level: HIGH")
+    print("Recommendation: Investigate activity, restrict access and review security logs.")
+else:
+    print("No Threat Detected.")
+    print("Risk Level: LOW")
+    print("Recommendation: Continue normal monitoring.")
+
+ Expected Output :
+ Model Accuracy: 1.0
+Threat Detected!
+Risk Level: HIGH
+Recommendation: Investigate activity, restrict access and review security logs.
